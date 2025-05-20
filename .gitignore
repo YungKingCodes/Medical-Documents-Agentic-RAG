@@ -39,3 +39,4 @@ ENV/
 *.log 
 
 # Chroma DB
+chroma_db/

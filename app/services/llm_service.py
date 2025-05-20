@@ -12,12 +12,9 @@ class LLMService:
         """Answer a question using RAG."""
         # Retrieve relevant chunks
         relevant_chunks = vector_store_service.search_similar_chunks(question)
-
-        print(f"relevant_chunks: {relevant_chunks}")
         
         # Prepare context from chunks
         context = "\n\n".join([chunk["content"] for chunk in relevant_chunks])
-        print(f"context: {context}")
         
         # Create prompt
         prompt = f"""
