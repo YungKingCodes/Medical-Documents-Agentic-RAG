@@ -693,3 +693,70 @@ Example response:
   "document_id": 1
 }
 ```
+
+## 🐳 Docker Setup
+
+### Prerequisites
+- Docker
+- Docker Compose
+
+### Environment Setup
+1. Create a `.env` file in the root directory with the following variables:
+```env
+# OpenAI API Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Database Configuration
+DOCUMENTS_DB_PATH=/app/documents.db
+CHROMA_DB_PATH=/app/chroma_db
+
+# Application Settings
+DEBUG=False
+LOG_LEVEL=INFO
+
+# API Settings
+API_HOST=0.0.0.0
+API_PORT=8000
+```
+
+### Building and Running
+1. Build the Docker images:
+```bash
+docker-compose build
+```
+
+2. Start the services:
+```bash
+docker-compose up
+```
+
+The API will be available at:
+- FastAPI Application: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+- ChromaDB (if needed): http://localhost:8001
+
+### Development Mode
+The application runs with hot-reload enabled by default. Any changes to the code in the `app` directory will automatically trigger a reload of the application.
+
+### Persistent Storage
+The following data is persisted across container restarts:
+- SQLite database: `./documents.db`
+- ChromaDB data: `./chroma_db/`
+
+### Stopping the Services
+To stop the services:
+```bash
+docker-compose down
+```
+
+### Troubleshooting
+1. If you encounter permission issues with the database files, ensure the correct permissions:
+```bash
+chmod 666 documents.db
+chmod -R 777 chroma_db/
+```
+
+2. If the services don't start properly, check the logs:
+```bash
+docker-compose logs -f
+```

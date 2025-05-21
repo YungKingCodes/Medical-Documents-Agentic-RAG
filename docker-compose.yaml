@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./chroma_db:/app/chroma_db
+      - ./documents.db:/app/documents.db
+    env_file:
+      - .env
+    environment:
+      - CHROMA_DB_PATH=/app/chroma_db
+      - DOCUMENTS_DB_PATH=/app/documents.db
+    depends_on:
+      - chroma
+    networks:
+      - app-network
+    # Enable hot reload for development
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  chroma:
+    image: chromadb/chroma:latest
+    volumes:
+      - ./chroma_db:/chroma/chroma_db
+    environment:
+      - CHROMA_DB_IMPL=duckdb+parquet
+      - PERSIST_DIRECTORY=/chroma/chroma_db
+    ports:
+      - "8001:8000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge 
